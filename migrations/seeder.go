@@ -1,7 +1,7 @@
 package migrations
 
 import (
-	"github.com/tapeds/go-fiber-template/migrations/seeds"
+	"github.com/jejevj/ykp_pos/migrations/seeds"
 	"gorm.io/gorm"
 )
 

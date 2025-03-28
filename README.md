@@ -3,11 +3,13 @@
 This is a fork from https://github.com/Caknoooo/go-gin-clean-starter but rewritten using Go Fiber
 
 ## Introduction 👋
+
 > Clean Architecture is an approach to organizing code in an application that focuses on separating responsibilities and dependencies between components. In the context of Golang, Clean Architecture refers to the application of Clean Architecture principles in developing applications using the Go programming language.
 
 Clean Architecture proposes a structured application design with several layers that have clear and isolated responsibilities. Each layer has a specific role and boundaries. Here are some common layers in Golang Clean Architecture:
 
 ## Directory / Layers 🔥
+
 - **Config**: Aims to be directly related to things outside the code, such as databases. Configuration files play a crucial role in customizing the behavior of software applications. A well-structured config file can simplify the process of fine-tuning various settings to meet specific project requirements.
 
 - **Constants**: This directory deals with things that cannot be changed, in other words, it is always constant and is usually called repeatedly.
@@ -23,81 +25,109 @@ Clean Architecture proposes a structured application design with several layers 
 - **Utils**: Short for "utility functions" or "utility tools," this refers to a collection of functions or tools used for common tasks such as data validation, string manipulation, security, error handling, database connection management, and more. Utils help avoid code duplication, improve code readability, and make application development more efficient by providing commonly used and reusable functions.
 
 ## Prerequisite 🏆
+
 - Go Version `>= go 1.20`
 - PostgreSQL Version `>= version 15.0`
 
 ## How To Use
+
 There are 2 ways to do running
+
 ### With Docker
+
 1. Copy the example environment file and configure it:
-  ```bash 
-  cp.env.example .env
-  ```
-2. Build Docker 
-  ```bash
-  docker-compose build --no-cache
-  ```
+
+```bash
+cp.env.example .env
+```
+
+2. Build Docker
+
+```bash
+docker-compose build --no-cache
+```
+
 3. Run Docker Compose
-  ```bash
-  docker compose up -d
-  ```
+
+```bash
+docker compose up -d
+```
 
 ### Without Docker
+
 1. Clone the repository or **Use This Template**
-  ```bash
-  git clone https://github.com/tapeds/go-fiber-template.git
-  ```
+
+```bash
+git clone https://github.com/jejevj/ykp_pos.git
+```
+
 2. Navigate to the project directory:
-  ```bash
-  cd go-fiber-template
-  ```
+
+```bash
+cd go-fiber-template
+```
+
 3. Copy the example environment file and configure it:
-  ```bash
-  cp .env.example .env
-  ```
+
+```bash
+cp .env.example .env
+```
+
 4. Configure `.env` with your PostgreSQL credentials:
-  ```bash
-  DB_HOST=localhost
-  DB_USER=postgres
-  DB_PASS=
-  DB_NAME=
-  DB_PORT=5432
-  ```
+
+```bash
+DB_HOST=localhost
+DB_USER=postgres
+DB_PASS=
+DB_NAME=
+DB_PORT=5432
+```
+
 5. Open the terminal and follow these steps:
-  - If you haven't downloaded PostgreSQL, download it first.
-  - Run:
-    ```bash
-    psql -U postgres
-    ```
-  - Create the database according to what you put in `.env` => if using uuid-ossp or auto generate (check file **/entity/user.go**):
-    ```bash
-    CREATE DATABASE your_database;
-    \c your_database
-    CREATE EXTENSION IF NOT EXISTS "uuid-ossp"; // remove default:uuid_generate_v4() if you not use you can uncomment code in user_entity.go
-    \q
-    ``` 
-6. Run the application:
+
+- If you haven't downloaded PostgreSQL, download it first.
+- Run:
   ```bash
-  go run main.go
+  psql -U postgres
+  ```
+- Create the database according to what you put in `.env` => if using uuid-ossp or auto generate (check file **/entity/user.go**):
+  ```bash
+  CREATE DATABASE your_database;
+  \c your_database
+  CREATE EXTENSION IF NOT EXISTS "uuid-ossp"; // remove default:uuid_generate_v4() if you not use you can uncomment code in user_entity.go
+  \q
   ```
 
+6. Run the application:
+
+```bash
+go run main.go
+```
+
 ## Run Migrations and Seeder
+
 To run migrations and seed the database, use the following commands:
 
 ```bash
 go run main.go --migrate --seed
 ```
 
-#### Migrate Database 
-To migrate the database schema 
+#### Migrate Database
+
+To migrate the database schema
+
 ```bash
 go run main.go --migrate
 ```
+
 This command will apply all pending migrations to your PostgreSQL database specified in `.env`
 
-#### Seeder Database 
+#### Seeder Database
+
 To seed the database with initial data:
+
 ```bash
 go run main.go --seed
 ```
+
 This command will populate the database with initial data using the seeders defined in your application.

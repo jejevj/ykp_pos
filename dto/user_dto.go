@@ -4,7 +4,7 @@ import (
 	"errors"
 	"mime/multipart"
 
-	"github.com/tapeds/go-fiber-template/entity"
+	"github.com/jejevj/ykp_pos/entity"
 )
 
 const (

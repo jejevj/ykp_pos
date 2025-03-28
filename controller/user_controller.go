@@ -4,9 +4,9 @@ import (
 	"net/http"
 
 	"github.com/gofiber/fiber/v2"
-	"github.com/tapeds/go-fiber-template/dto"
-	"github.com/tapeds/go-fiber-template/service"
-	"github.com/tapeds/go-fiber-template/utils"
+	"github.com/jejevj/ykp_pos/dto"
+	"github.com/jejevj/ykp_pos/service"
+	"github.com/jejevj/ykp_pos/utils"
 )
 
 type (

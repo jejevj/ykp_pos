@@ -5,13 +5,13 @@ import (
 	"os"
 
 	"github.com/gofiber/fiber/v2"
-	"github.com/tapeds/go-fiber-template/cmd"
-	"github.com/tapeds/go-fiber-template/config"
-	"github.com/tapeds/go-fiber-template/controller"
-	"github.com/tapeds/go-fiber-template/middleware"
-	"github.com/tapeds/go-fiber-template/repository"
-	"github.com/tapeds/go-fiber-template/routes"
-	"github.com/tapeds/go-fiber-template/service"
+	"github.com/jejevj/ykp_pos/cmd"
+	"github.com/jejevj/ykp_pos/config"
+	"github.com/jejevj/ykp_pos/controller"
+	"github.com/jejevj/ykp_pos/middleware"
+	"github.com/jejevj/ykp_pos/repository"
+	"github.com/jejevj/ykp_pos/routes"
+	"github.com/jejevj/ykp_pos/service"
 )
 
 func main() {

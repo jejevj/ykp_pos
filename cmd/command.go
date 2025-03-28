@@ -4,7 +4,7 @@ import (
 	"log"
 	"os"
 
-	"github.com/tapeds/go-fiber-template/migrations"
+	"github.com/jejevj/ykp_pos/migrations"
 	"gorm.io/gorm"
 )
 

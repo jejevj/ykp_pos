@@ -2,7 +2,6 @@ package entity
 
 import (
 	"github.com/google/uuid"
-	"github.com/jejevj/ykp_pos/helpers"
 	"gorm.io/gorm"
 )
 
@@ -23,12 +22,5 @@ func (u *Transaksi) BeforeCreate(tx *gorm.DB) error {
 			tx.Rollback()
 		}
 	}()
-
-	var err error
-	// u.ID = uuid.New()
-	u.Password, err = helpers.HashPassword(u.Password)
-	if err != nil {
-		return err
-	}
 	return nil
 }

@@ -8,11 +8,19 @@
     "is_verified": true
   },
   {
-    "name": "user",
+    "name": "sales",
     "telp_number": "08123456789",
-    "email": "user1234@gmail.com",
-    "password": "user1234",
-    "role": "user",
+    "email": "sales1234@gmail.com",
+    "password": "sales1234",
+    "role": "sales",
+    "is_verified": true
+  },
+  {
+    "name": "super",
+    "telp_number": "08123456789",
+    "email": "super1234@gmail.com",
+    "password": "super1234",
+    "role": "super",
     "is_verified": true
   }
 ]

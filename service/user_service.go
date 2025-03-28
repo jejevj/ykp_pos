@@ -79,7 +79,7 @@ func (s *userService) RegisterUser(ctx context.Context, req dto.UserCreateReques
 		Name:       req.Name,
 		TelpNumber: req.TelpNumber,
 		ImageUrl:   filename,
-		Role:       constants.ENUM_ROLE_USER,
+		Role:       constants.ENUM_ROLE_SALES,
 		Email:      req.Email,
 		Password:   req.Password,
 		IsVerified: false,

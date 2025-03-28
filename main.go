@@ -28,12 +28,17 @@ func main() {
 
 		// Repository
 		userRepository repository.UserRepository = repository.NewUserRepository(db)
-
 		// Service
 		userService service.UserService = service.NewUserService(userRepository, jwtService)
-
 		// Controller
 		userController controller.UserController = controller.NewUserController(userService)
+
+		// Repository
+		satuanRepository repository.SatuanRepository = repository.NewSatuanRepository(db)
+		// Service
+		satuanService service.SatuanService = service.NewSatuanService(satuanRepository, jwtService)
+		// Controller
+		satuanController controller.SatuanController = controller.NewSatuanController(satuanService)
 	)
 
 	server := fiber.New()
@@ -42,6 +47,7 @@ func main() {
 
 	// routes
 	routes.User(apiGroup, userController, jwtService)
+	routes.Satuan(apiGroup, satuanController, jwtService)
 
 	server.Static("/assets", "./assets")
 

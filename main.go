@@ -33,6 +33,7 @@ func main() {
 		// Controller
 		userController controller.UserController = controller.NewUserController(userService)
 
+		// Satuan Service
 		// Repository
 		satuanRepository repository.SatuanRepository = repository.NewSatuanRepository(db)
 		// Service

@@ -31,6 +31,7 @@ type (
 	}
 
 	SatuanUpdateRequest struct {
+		ID         string `json:"id" form:"id"`
 		NamaSatuan string `json:"nama_satuan" form:"nama_satuan"`
 		Value      int    `json:"value" form:"value"`
 	}

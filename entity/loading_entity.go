@@ -9,7 +9,7 @@ type Loading struct {
 	ID         uuid.UUID `gorm:"type:uuid;primary_key;default:uuid_generate_v4()" json:"id"`
 	IdUser     uuid.UUID `json:"id_user"`
 	User       User      `gorm:"foreignKey:IdUser" json:"user"`
-	IsApproved bool      `json:"is_approved"`
+	IsApproved bool      `gorm:"default:false" json:"is_approved"`
 
 	Timestamp
 }

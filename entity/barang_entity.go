@@ -9,8 +9,8 @@ type Barang struct {
 	ID         uuid.UUID `gorm:"type:uuid;primary_key;default:uuid_generate_v4()" json:"id"`
 	NamaBarang string    `json:"nama_barang"`
 	KodeBarang string    `json:"kode_barang"`
-	HargaBeli  string    `json:"harga_beli"`
-	HargaJual  string    `json:"harga_jual"`
+	HargaBeli  int       `json:"harga_beli"`
+	HargaJual  int       `json:"harga_jual"`
 	IdSatuan   uuid.UUID `json:"id_satuan"`
 	Satuan     Satuan    `gorm:"foreignKey:IdSatuan" json:"satuan"`
 	Stok       int       `json:"stok"`

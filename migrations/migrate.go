@@ -23,6 +23,10 @@ func Migrate(db *gorm.DB) error {
 
 	if err := db.AutoMigrate(
 		&entity.User{},
+		&entity.Satuan{},
+		&entity.Barang{},
+		&entity.Loading{},
+		&entity.Transaksi{},
 	); err != nil {
 		return err
 	}

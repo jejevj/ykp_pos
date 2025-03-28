@@ -6,14 +6,14 @@ import (
 
 type (
 	SatuanCreateRequest struct {
-		NameSatuan string `json:"nama_satuan" form:"nama_satuan"`
+		NamaSatuan string `json:"nama_satuan" form:"nama_satuan"`
 		Value      int    `json:"value" form:"value"`
 	}
 
 	SatuanResponse struct {
 		ID         string `json:"id"`
 		NamaSatuan string `json:"nama_satuan"`
-		Value      string `json:"value"`
+		Value      int    `json:"value"`
 	}
 
 	SatuanPaginationResponse struct {
@@ -26,14 +26,18 @@ type (
 		PaginationResponse
 	}
 
+	GetSatuanByIdRequest struct {
+		ID string `json:"id"`
+	}
+
 	SatuanUpdateRequest struct {
-		NameSatuan string `json:"nama_satuan" form:"nama_satuan"`
+		NamaSatuan string `json:"nama_satuan" form:"nama_satuan"`
 		Value      int    `json:"value" form:"value"`
 	}
 
 	SatuanUpdateResponse struct {
 		ID         string `json:"id"`
 		NamaSatuan string `json:"nama_satuan"`
-		Value      string `json:"value"`
+		Value      int    `json:"value"`
 	}
 )

@@ -4,3 +4,4 @@ assets/
 volumes/
 tmp/
 bin/
+*.bat

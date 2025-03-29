@@ -84,27 +84,57 @@ func (c *satuanController) GetAllSatuanWithPagination(ctx *fiber.Ctx) error {
 
 	return ctx.Status(http.StatusOK).JSON(resp)
 }
+
 func (c *satuanController) UpdateSatuan(ctx *fiber.Ctx) error {
-	id := ctx.Params("id")
+	// Parse the request body to get the update request
 	var req dto.SatuanUpdateRequest
 	if err := ctx.BodyParser(&req); err != nil {
 		res := utils.BuildResponseFailed(dto.MESSAGE_FAILED_GET_DATA_FROM_BODY, err.Error(), nil)
 		return ctx.Status(http.StatusBadRequest).JSON(res)
 	}
 
-	result, err := c.satuanService.UpdateSatuan(ctx.Context(), req, id)
+	// Check if ID is provided in the request body
+	if req.ID == "" {
+		res := utils.BuildResponseFailed("failed update data", "ID is missing or empty", nil)
+		return ctx.Status(http.StatusBadRequest).JSON(res)
+	}
+
+	// Get the existing data by ID
+	existingSatuan, err := c.satuanService.GetSatuanById(ctx.Context(), req.ID)
+	if err != nil {
+		res := utils.BuildResponseFailed("failed update data", "Satuan not found: "+err.Error(), nil)
+		return ctx.Status(http.StatusNotFound).JSON(res)
+	}
+
+	// Use the existing entity and update the fields
+	existingSatuan.NamaSatuan = req.NamaSatuan
+	existingSatuan.Value = req.Value
+
+	// Call the service to update the Satuan
+	result, err := c.satuanService.UpdateSatuan(ctx.Context(), req, req.ID)
 	if err != nil {
 		res := utils.BuildResponseFailed(dto.MESSAGE_FAILED_UPDATE_USER, err.Error(), nil)
 		return ctx.Status(http.StatusBadRequest).JSON(res)
 	}
 
+	// Return the success response with the updated Satuan
 	res := utils.BuildResponseSuccess(dto.MESSAGE_SUCCESS_UPDATE_USER, result)
 	return ctx.Status(http.StatusOK).JSON(res)
 }
 
 func (c *satuanController) DeleteSatuan(ctx *fiber.Ctx) error {
-	id := ctx.Params("id")
-	err := c.satuanService.DeleteSatuan(ctx.Context(), id)
+	var req dto.GetSatuanByIdRequest
+	if err := ctx.BodyParser(&req); err != nil {
+		res := utils.BuildResponseFailed(dto.MESSAGE_FAILED_GET_DATA_FROM_BODY, err.Error(), nil)
+		return ctx.Status(http.StatusBadRequest).JSON(res)
+	}
+
+	if req.ID == "" {
+		res := utils.BuildResponseFailed("failed delete data", "ID is missing or empty", nil)
+		return ctx.Status(http.StatusBadRequest).JSON(res)
+	}
+
+	err := c.satuanService.DeleteSatuan(ctx.Context(), req.ID)
 	if err != nil {
 		res := utils.BuildResponseFailed(dto.MESSAGE_FAILED_DELETE_USER, err.Error(), nil)
 		return ctx.Status(http.StatusBadRequest).JSON(res)

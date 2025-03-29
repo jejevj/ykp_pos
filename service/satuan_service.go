@@ -2,7 +2,9 @@ package service
 
 import (
 	"context"
+	"fmt"
 
+	"github.com/google/uuid"
 	"github.com/jejevj/ykp_pos/dto"
 	"github.com/jejevj/ykp_pos/entity"
 	"github.com/jejevj/ykp_pos/repository"
@@ -88,20 +90,23 @@ func (s *satuanService) GetSatuanById(ctx context.Context, satuanId string) (dto
 	}, nil
 }
 func (s *satuanService) UpdateSatuan(ctx context.Context, req dto.SatuanUpdateRequest, satuanId string) (dto.SatuanUpdateResponse, error) {
-	satuan, err := s.satuanRepo.GetSatuanById(ctx, satuanId)
+	// Convert string ID to uuid.UUID (if needed)
+	id, err := uuid.Parse(satuanId)
 	if err != nil {
-		return dto.SatuanUpdateResponse{}, dto.ErrUserNotFound
+		return dto.SatuanUpdateResponse{}, fmt.Errorf("invalid ID format: %v", err)
 	}
 
+	// Prepare the entity to be updated
 	data := entity.Satuan{
-		ID:         satuan.ID,
+		ID:         id,
 		NamaSatuan: req.NamaSatuan,
 		Value:      req.Value,
 	}
 
+	// Call the repository to update
 	satuanUpdate, err := s.satuanRepo.UpdateSatuan(ctx, data)
 	if err != nil {
-		return dto.SatuanUpdateResponse{}, dto.ErrUpdateSatuan
+		return dto.SatuanUpdateResponse{}, fmt.Errorf("failed to update Satuan: %v", err)
 	}
 
 	return dto.SatuanUpdateResponse{
@@ -110,6 +115,7 @@ func (s *satuanService) UpdateSatuan(ctx context.Context, req dto.SatuanUpdateRe
 		Value:      satuanUpdate.Value,
 	}, nil
 }
+
 func (s *satuanService) DeleteSatuan(ctx context.Context, satuanId string) error {
 	satuan, err := s.satuanRepo.GetSatuanById(ctx, satuanId)
 	if err != nil {

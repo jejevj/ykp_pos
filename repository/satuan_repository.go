@@ -2,6 +2,7 @@ package repository
 
 import (
 	"context"
+	"fmt"
 	"math"
 
 	"github.com/jejevj/ykp_pos/dto"
@@ -85,11 +86,23 @@ func (r *satuanRepository) GetSatuanById(ctx context.Context, satuanId string) (
 func (r *satuanRepository) UpdateSatuan(ctx context.Context, satuan entity.Satuan) (entity.Satuan, error) {
 	tx := r.db
 
-	if err := tx.WithContext(ctx).Updates(&satuan).Error; err != nil {
+	// First, check if the record exists
+	var existingSatuan entity.Satuan
+	if err := tx.WithContext(ctx).Where("id = ?", satuan.ID).Take(&existingSatuan).Error; err != nil {
+		// If the record doesn't exist, return a specific error
+		if err == gorm.ErrRecordNotFound {
+			return entity.Satuan{}, fmt.Errorf("Satuan with ID %s not found", satuan.ID)
+		}
 		return entity.Satuan{}, err
 	}
 
-	return satuan, nil
+	// Proceed with updating the record
+	if err := tx.WithContext(ctx).Model(&existingSatuan).Updates(satuan).Error; err != nil {
+		return entity.Satuan{}, err
+	}
+
+	// Return the updated entity
+	return existingSatuan, nil
 }
 func (r *satuanRepository) DeleteSatuan(ctx context.Context, satuanId string) error {
 	tx := r.db

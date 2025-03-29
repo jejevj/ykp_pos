@@ -9,6 +9,9 @@ type (
 		IdUser string `json:"id_user" form:"id_user"`
 	}
 
+	GetLoadingByIdRequest struct {
+		ID string `json:"id" form:"id"`
+	}
 	LoadingResponse struct {
 		ID         string       `json:"id"`
 		IdUser     string       `json:"id_user"`
@@ -27,12 +30,8 @@ type (
 	}
 
 	LoadingUpdateRequest struct {
-		NamaBarang string `json:"nama_barang" form:"nama_barang"`
-		KodeBarang string `json:"kode_barang" form:"kode_barang"`
-		HargaBeli  int    `json:"harga_beli" form:"harga_beli"`
-		HargaJual  int    `json:"harga_jual" form:"harga_jual"`
-		IdSatuan   string `json:"id_satuan" form:"id_satuan"`
-		Stok       int    `json:"stok" form:"stok"`
+		ID         string `json:"id" form:"id"`
+		IsApproved bool   `json:"is_approved" form:"is_approved"`
 	}
 
 	LoadingUpdateResponse struct {

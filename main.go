@@ -48,6 +48,13 @@ func main() {
 		barangService service.BarangService = service.NewBarangService(barangRepository, jwtService)
 		// Controller
 		barangController controller.BarangController = controller.NewBarangController(barangService)
+		// Loading Service
+		// Repository
+		loadingRepository repository.LoadingRepository = repository.NewLoadingRepository(db)
+		// Service
+		loadingService service.LoadingService = service.NewLoadingService(loadingRepository, jwtService)
+		// Controller
+		loadingController controller.LoadingController = controller.NewLoadingController(loadingService)
 	)
 
 	server := fiber.New()
@@ -58,6 +65,7 @@ func main() {
 	routes.User(apiGroup, userController, jwtService)
 	routes.Satuan(apiGroup, satuanController, jwtService)
 	routes.Barang(apiGroup, barangController, jwtService)
+	routes.Loading(apiGroup, loadingController, jwtService)
 
 	server.Static("/assets", "./assets")
 

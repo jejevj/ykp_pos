@@ -63,4 +63,11 @@ var (
 	ErrUpdateBarang   = errors.New("failed to update barang")
 	ErrBarangNotFound = errors.New("data not found")
 	ErrDeleteBarang   = errors.New("failed to delete barang")
+
+	// Loading Error
+	ErrCreateLoading   = errors.New("failed to create loading")
+	ErrGetLoadingById  = errors.New("failed to get loading by id")
+	ErrUpdateLoading   = errors.New("failed to update loading")
+	ErrLoadingNotFound = errors.New("data not found")
+	ErrDeleteLoading   = errors.New("failed to delete loading")
 )

@@ -70,4 +70,10 @@ var (
 	ErrUpdateLoading   = errors.New("failed to update loading")
 	ErrLoadingNotFound = errors.New("data not found")
 	ErrDeleteLoading   = errors.New("failed to delete loading")
+	// Transaksi Error
+	ErrCreateTransaksi   = errors.New("failed to create transaksi")
+	ErrGetTransaksiById  = errors.New("failed to get transaksi by id")
+	ErrUpdateTransaksi   = errors.New("failed to update transaksi")
+	ErrTransaksiNotFound = errors.New("data not found")
+	ErrDeleteTransaksi   = errors.New("failed to delete transaksi")
 )

@@ -7,9 +7,9 @@ import (
 
 type Transaksi struct {
 	ID        uuid.UUID `gorm:"type:uuid;primary_key;default:uuid_generate_v4()" json:"id"`
-	IdLoading uuid.UUID `json:"id_loading"`
+	IdLoading string    `json:"id_loading"`
 	Loading   Loading   `gorm:"foreignKey:IdLoading" json:"loading"`
-	IdBarang  uuid.UUID `json:"id_barang"`
+	IdBarang  string    `json:"id_barang"`
 	Barang    Barang    `gorm:"foreignKey:IdBarang" json:"barang"`
 	Jumlah    int       `json:"id_satuan"`
 

@@ -10,6 +10,9 @@ type (
 		IdBarang  string `json:"id_barang" form:"id_barang"`
 		Jumlah    int    `json:"jumlah" form:"jumlah"`
 	}
+	GetTransaksiByIdRequest struct {
+		ID string `json:"id" form:"id"`
+	}
 	TransaksiResponse struct {
 		ID        string          `json:"id"`
 		IdLoading string          `json:"id_loading"`
@@ -28,6 +31,7 @@ type (
 		PaginationResponse
 	}
 	TransaksiUpdateRequest struct {
+		ID        string `json:"id" form:"id"`
 		IdLoading string `json:"id_loading" form:"id_loading"`
 		IdBarang  string `json:"id_barang" form:"id_barang"`
 		Jumlah    int    `json:"jumlah" form:"jumlah"`

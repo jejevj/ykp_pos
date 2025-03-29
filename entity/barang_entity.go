@@ -11,7 +11,7 @@ type Barang struct {
 	KodeBarang string    `json:"kode_barang"`
 	HargaBeli  int       `json:"harga_beli"`
 	HargaJual  int       `json:"harga_jual"`
-	IdSatuan   uuid.UUID `json:"id_satuan"`
+	IdSatuan   string    `json:"id_satuan"`
 	Satuan     Satuan    `gorm:"foreignKey:IdSatuan" json:"satuan"`
 	Stok       int       `json:"stok"`
 

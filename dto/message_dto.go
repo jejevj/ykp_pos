@@ -56,4 +56,11 @@ var (
 	ErrUpdateSatuan   = errors.New("failed to update satuan")
 	ErrSatuanNotFound = errors.New("data not found")
 	ErrDeleteSatuan   = errors.New("failed to delete satuan")
+
+	// Barang Error
+	ErrCreateBarang   = errors.New("failed to create barang")
+	ErrGetBarangById  = errors.New("failed to get barang by id")
+	ErrUpdateBarang   = errors.New("failed to update barang")
+	ErrBarangNotFound = errors.New("data not found")
+	ErrDeleteBarang   = errors.New("failed to delete barang")
 )

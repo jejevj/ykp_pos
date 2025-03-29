@@ -13,6 +13,9 @@ type (
 		IdSatuan   string `json:"id_satuan" form:"id_satuan"`
 		Stok       int    `json:"stok" form:"stok"`
 	}
+	GetBarangByIdRequest struct {
+		ID string `json:"id" form:"id"`
+	}
 
 	BarangResponse struct {
 		ID         string         `json:"id"`
@@ -36,6 +39,7 @@ type (
 	}
 
 	BarangUpdateRequest struct {
+		ID         string `json:"id" form:"id"`
 		NamaBarang string `json:"nama_barang" form:"nama_barang"`
 		KodeBarang string `json:"kode_barang" form:"kode_barang"`
 		HargaBeli  int    `json:"harga_beli" form:"harga_beli"`

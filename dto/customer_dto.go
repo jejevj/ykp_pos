@@ -8,8 +8,8 @@ type (
 	CustomerCreateRequest struct {
 		NamaToko    string `json:"nama_toko" form:"nama_toko"`
 		NamaPemilik string `json:"nama_pemilik" form:"nama_pemilik"`
-		Alamat      int    `json:"alamat" form:"alamat"`
-		HP          int    `json:"hp" form:"hp"`
+		Alamat      string `json:"alamat" form:"alamat"`
+		HP          string `json:"hp" form:"hp"`
 	}
 	GetCustomerByIdRequest struct {
 		ID string `json:"id" form:"id"`
@@ -19,8 +19,8 @@ type (
 		ID          string `json:"id"`
 		NamaToko    string `json:"nama_toko"`
 		NamaPemilik string `json:"nama_pemilik"`
-		Alamat      int    `json:"alamat"`
-		HP          int    `json:"hp"`
+		Alamat      string `json:"alamat"`
+		HP          string `json:"hp"`
 	}
 
 	CustomerPaginationResponse struct {
@@ -37,14 +37,15 @@ type (
 		ID          string `json:"id" form:"id"`
 		NamaToko    string `json:"nama_toko"`
 		NamaPemilik string `json:"nama_pemilik"`
-		Alamat      int    `json:"alamat"`
-		HP          int    `json:"hp"`
+		Alamat      string `json:"alamat"`
+		HP          string `json:"hp"`
 	}
 
 	CustomerUpdateResponse struct {
+		ID          string `json:"id"`
 		NamaToko    string `json:"nama_toko"`
 		NamaPemilik string `json:"nama_pemilik"`
-		Alamat      int    `json:"alamat"`
-		HP          int    `json:"hp"`
+		Alamat      string `json:"alamat"`
+		HP          string `json:"hp"`
 	}
 )

@@ -64,6 +64,14 @@ func main() {
 		transaksiService service.TransaksiService = service.NewTransaksiService(transaksiRepository, jwtService)
 		// Controller
 		transaksiController controller.TransaksiController = controller.NewTransaksiController(transaksiService)
+
+		// Customer Service
+		// Repository
+		customerRepository repository.CustomerRepository = repository.NewCustomerRepository(db)
+		// Service
+		customerService service.CustomerService = service.NewCustomerService(customerRepository, jwtService)
+		// Controller
+		customerController controller.CustomerController = controller.NewCustomerController(customerService)
 	)
 
 	server := fiber.New()
@@ -76,6 +84,7 @@ func main() {
 	routes.Barang(apiGroup, barangController, jwtService)
 	routes.Loading(apiGroup, loadingController, jwtService)
 	routes.Transaksi(apiGroup, transaksiController, jwtService)
+	routes.Customer(apiGroup, customerController, jwtService)
 
 	server.Static("/assets", "./assets")
 

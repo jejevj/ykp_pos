@@ -76,4 +76,10 @@ var (
 	ErrUpdateTransaksi   = errors.New("failed to update transaksi")
 	ErrTransaksiNotFound = errors.New("data not found")
 	ErrDeleteTransaksi   = errors.New("failed to delete transaksi")
+	// Customer Error
+	ErrCreateCustomer   = errors.New("failed to create customer")
+	ErrGetCustomerById  = errors.New("failed to get customer by id")
+	ErrUpdateCustomer   = errors.New("failed to update customer")
+	ErrCustomerNotFound = errors.New("data not found")
+	ErrDeleteCustomer   = errors.New("failed to delete customer")
 )

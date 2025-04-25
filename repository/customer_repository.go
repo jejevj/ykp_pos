@@ -13,7 +13,7 @@ import (
 type (
 	CustomerRepository interface {
 		AddCustomer(ctx context.Context, customer entity.Customer) (entity.Customer, error)
-		GetAllCustomerWithPagination(ctx context.Context, req dto.PaginationRequest) (dto.GetAllCustomerRepositoryResponse, error)
+		GetAllCustomerWithPagination(ctx context.Context) (dto.GetAllCustomerRepositoryResponse, error)
 		GetCustomerById(ctx context.Context, customerId string) (entity.Customer, error)
 		UpdateCustomer(ctx context.Context, customer entity.Customer) (entity.Customer, error)
 		DeleteCustomer(ctx context.Context, customerId string) error
@@ -38,36 +38,28 @@ func (r *customerRepository) AddCustomer(ctx context.Context, customer entity.Cu
 	return customer, nil
 }
 
-func (r *customerRepository) GetAllCustomerWithPagination(ctx context.Context, req dto.PaginationRequest) (dto.GetAllCustomerRepositoryResponse, error) {
+func (r *customerRepository) GetAllCustomerWithPagination(ctx context.Context) (dto.GetAllCustomerRepositoryResponse, error) {
 	tx := r.db
 
 	var customers []entity.Customer
 	var err error
 	var count int64
 
-	if req.PerPage == 0 {
-		req.PerPage = 10
-	}
-
-	if req.Page == 0 {
-		req.Page = 1
-	}
-
 	if err := tx.WithContext(ctx).Model(&entity.Customer{}).Count(&count).Error; err != nil {
 		return dto.GetAllCustomerRepositoryResponse{}, err
 	}
 
-	if err := tx.WithContext(ctx).Scopes(Paginate(req.Page, req.PerPage)).Find(&customers).Error; err != nil {
+	if err := tx.WithContext(ctx).Scopes(Paginate(1, 10)).Find(&customers).Error; err != nil {
 		return dto.GetAllCustomerRepositoryResponse{}, err
 	}
 
-	totalPage := int64(math.Ceil(float64(count) / float64(req.PerPage)))
+	totalPage := int64(math.Ceil(float64(count) / float64(10)))
 
 	return dto.GetAllCustomerRepositoryResponse{
 		Customers: customers,
 		PaginationResponse: dto.PaginationResponse{
-			Page:    req.Page,
-			PerPage: req.PerPage,
+			Page:    1,
+			PerPage: 10,
 			Count:   count,
 			MaxPage: totalPage,
 		},

@@ -14,5 +14,6 @@ func Barang(route fiber.Router, barangController controller.BarangController, jw
 	routes.Get("", barangController.GetAllBarangWithPagination)
 	routes.Delete("", middleware.Authenticate(jwtService), barangController.DeleteBarang)
 	routes.Put("", middleware.Authenticate(jwtService), barangController.UpdateBarang)
+	routes.Put("/stok", middleware.Authenticate(jwtService), barangController.UpdateStokBarang)
 	routes.Get("/by-id", middleware.Authenticate(jwtService), barangController.GetBarangById)
 }

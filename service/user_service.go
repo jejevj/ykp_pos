@@ -22,7 +22,7 @@ import (
 type (
 	UserService interface {
 		RegisterUser(ctx context.Context, req dto.UserCreateRequest) (dto.UserResponse, error)
-		GetAllUserWithPagination(ctx context.Context, req dto.PaginationRequest) (dto.UserPaginationResponse, error)
+		GetAllUserWithPagination(ctx context.Context) (dto.UserPaginationResponse, error)
 		GetUserById(ctx context.Context, userId string) (dto.UserResponse, error)
 		GetUserByEmail(ctx context.Context, email string) (dto.UserResponse, error)
 		SendVerificationEmail(ctx context.Context, req dto.SendVerificationEmailRequest) error
@@ -221,8 +221,8 @@ func (s *userService) VerifyEmail(ctx context.Context, req dto.VerifyEmailReques
 	}, nil
 }
 
-func (s *userService) GetAllUserWithPagination(ctx context.Context, req dto.PaginationRequest) (dto.UserPaginationResponse, error) {
-	dataWithPaginate, err := s.userRepo.GetAllUserWithPagination(ctx, req)
+func (s *userService) GetAllUserWithPagination(ctx context.Context) (dto.UserPaginationResponse, error) {
+	dataWithPaginate, err := s.userRepo.GetAllUserWithPagination(ctx)
 	if err != nil {
 		return dto.UserPaginationResponse{}, err
 	}

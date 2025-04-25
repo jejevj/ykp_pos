@@ -63,13 +63,8 @@ func (c *satuanController) GetSatuanById(ctx *fiber.Ctx) error {
 	return ctx.Status(http.StatusOK).JSON(res)
 }
 func (c *satuanController) GetAllSatuanWithPagination(ctx *fiber.Ctx) error {
-	var req dto.PaginationRequest
-	if err := ctx.BodyParser(&req); err != nil {
-		res := utils.BuildResponseFailed(dto.MESSAGE_FAILED_GET_DATA_FROM_BODY, err.Error(), nil)
-		return ctx.Status(http.StatusBadRequest).JSON(res)
-	}
 
-	result, err := c.satuanService.GetAllSatuanWithPagination(ctx.Context(), req)
+	result, err := c.satuanService.GetAllSatuanWithPagination(ctx.Context())
 	if err != nil {
 		res := utils.BuildResponseFailed(dto.MESSAGE_FAILED_GET_LIST_USER, err.Error(), nil)
 		return ctx.Status(http.StatusBadRequest).JSON(res)
@@ -79,7 +74,6 @@ func (c *satuanController) GetAllSatuanWithPagination(ctx *fiber.Ctx) error {
 		Status:  true,
 		Message: dto.MESSAGE_SUCCESS_GET_LIST_USER,
 		Data:    result.Data,
-		Meta:    result.PaginationResponse,
 	}
 
 	return ctx.Status(http.StatusOK).JSON(resp)

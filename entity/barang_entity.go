@@ -6,14 +6,16 @@ import (
 )
 
 type Barang struct {
-	ID         uuid.UUID `gorm:"type:uuid;primary_key;default:uuid_generate_v4()" json:"id"`
-	NamaBarang string    `json:"nama_barang"`
-	KodeBarang string    `json:"kode_barang"`
-	HargaBeli  int       `json:"harga_beli"`
-	HargaJual  int       `json:"harga_jual"`
-	IdSatuan   string    `json:"id_satuan"`
-	Satuan     Satuan    `gorm:"foreignKey:IdSatuan" json:"satuan"`
-	Stok       int       `json:"stok"`
+	ID           uuid.UUID `gorm:"type:uuid;primary_key;default:uuid_generate_v4()" json:"id"`
+	NamaBarang   string    `json:"nama_barang"`
+	KodeBarang   string    `json:"kode_barang"`
+	HargaBeli    int       `json:"harga_beli"`
+	HargaJual    int       `json:"harga_jual"`
+	IdSatuan     string    `json:"id_satuan"`
+	Satuan       Satuan    `gorm:"foreignKey:IdSatuan" json:"satuan"`
+	JumlahKrat   int       `json:"jumlah_krat"`
+	JumlahSatuan int       `json:"jumlah_satuan"`
+	Stok         int       `json:"stok"`
 
 	Timestamp
 }

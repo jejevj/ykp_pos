@@ -81,10 +81,19 @@ func (s *loadingService) GetLoadingById(ctx context.Context, loadingId string) (
 	if err != nil {
 		return dto.LoadingResponse{}, dto.ErrGetLoadingById
 	}
+	userResponse := dto.UserResponse{
+		ID:         loading.User.ID.String(),
+		Name:       loading.User.Name,
+		Email:      loading.User.Email,
+		TelpNumber: loading.User.TelpNumber,
+		ImageUrl:   loading.User.ImageUrl,
+		// Add other fields from Satuan entity if necessary
+	}
 
 	return dto.LoadingResponse{
 		ID:         loading.ID.String(),
 		IdUser:     loading.IdUser,
+		User:       userResponse,
 		IsApproved: loading.IsApproved,
 	}, nil
 }

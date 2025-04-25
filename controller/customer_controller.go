@@ -63,13 +63,9 @@ func (c *customerController) GetCustomerById(ctx *fiber.Ctx) error {
 	return ctx.Status(http.StatusOK).JSON(res)
 }
 func (c *customerController) GetAllCustomerWithPagination(ctx *fiber.Ctx) error {
-	var req dto.PaginationRequest
-	if err := ctx.BodyParser(&req); err != nil {
-		res := utils.BuildResponseFailed(dto.MESSAGE_FAILED_GET_DATA_FROM_BODY, err.Error(), nil)
-		return ctx.Status(http.StatusBadRequest).JSON(res)
-	}
+	// var req dto.PaginationRequest
 
-	result, err := c.customerService.GetAllCustomerWithPagination(ctx.Context(), req)
+	result, err := c.customerService.GetAllCustomerWithPagination(ctx.Context())
 	if err != nil {
 		res := utils.BuildResponseFailed(dto.MESSAGE_FAILED_GET_LIST_USER, err.Error(), nil)
 		return ctx.Status(http.StatusBadRequest).JSON(res)

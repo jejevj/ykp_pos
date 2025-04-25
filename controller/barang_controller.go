@@ -15,6 +15,7 @@ type (
 		GetBarangById(ctx *fiber.Ctx) error
 		GetAllBarangWithPagination(ctx *fiber.Ctx) error
 		UpdateBarang(ctx *fiber.Ctx) error
+		UpdateStokBarang(ctx *fiber.Ctx) error
 		DeleteBarang(ctx *fiber.Ctx) error
 	}
 
@@ -62,24 +63,22 @@ func (c *barangController) GetBarangById(ctx *fiber.Ctx) error {
 	res := utils.BuildResponseSuccess(dto.MESSAGE_SUCCESS_GET_USER, result)
 	return ctx.Status(http.StatusOK).JSON(res)
 }
-func (c *barangController) GetAllBarangWithPagination(ctx *fiber.Ctx) error {
-	var req dto.PaginationRequest
-	if err := ctx.BodyParser(&req); err != nil {
-		res := utils.BuildResponseFailed(dto.MESSAGE_FAILED_GET_DATA_FROM_BODY, err.Error(), nil)
-		return ctx.Status(http.StatusBadRequest).JSON(res)
-	}
 
-	result, err := c.barangService.GetAllBarangWithPagination(ctx.Context(), req)
+func (c *barangController) GetAllBarangWithPagination(ctx *fiber.Ctx) error {
+
+	result, err := c.barangService.GetAllBarangWithPagination(ctx.Context())
 	if err != nil {
 		res := utils.BuildResponseFailed(dto.MESSAGE_FAILED_GET_LIST_USER, err.Error(), nil)
 		return ctx.Status(http.StatusBadRequest).JSON(res)
 	}
 
-	resp := utils.Response{
-		Status:  true,
-		Message: dto.MESSAGE_SUCCESS_GET_LIST_USER,
-		Data:    result.Data,
-		Meta:    result.PaginationResponse,
+	// Respond in DataTable format
+	resp := map[string]interface{}{
+		"draw":            1,                               // Draw is the request counter from the frontend (for synchronizing requests)
+		"recordsTotal":    result.PaginationResponse.Count, // Total records in the database (without filter)
+		"recordsFiltered": result.PaginationResponse.Count, // Total records after filter
+		"data":            result.Data,                     // The actual data to be displayed
+		"meta":            result.PaginationResponse,       // Pagination metadata
 	}
 
 	return ctx.Status(http.StatusOK).JSON(resp)
@@ -116,6 +115,32 @@ func (c *barangController) UpdateBarang(ctx *fiber.Ctx) error {
 
 	// Call the service to update the Barang
 	result, err := c.barangService.UpdateBarang(ctx.Context(), req, req.ID)
+	if err != nil {
+		res := utils.BuildResponseFailed(dto.MESSAGE_FAILED_UPDATE_USER, err.Error(), nil)
+		return ctx.Status(http.StatusBadRequest).JSON(res)
+	}
+
+	// Return the success response with the updated Barang
+	res := utils.BuildResponseSuccess(dto.MESSAGE_SUCCESS_UPDATE_USER, result)
+	return ctx.Status(http.StatusOK).JSON(res)
+}
+
+func (c *barangController) UpdateStokBarang(ctx *fiber.Ctx) error {
+	// Parse the request body to get the update request
+	var req dto.BarangUpdateStokRequest
+	if err := ctx.BodyParser(&req); err != nil {
+		res := utils.BuildResponseFailed(dto.MESSAGE_FAILED_GET_DATA_FROM_BODY, err.Error(), nil)
+		return ctx.Status(http.StatusBadRequest).JSON(res)
+	}
+
+	// Check if ID is provided in the request body
+	if req.ID == "" {
+		res := utils.BuildResponseFailed("failed update data", "ID is missing or empty", nil)
+		return ctx.Status(http.StatusBadRequest).JSON(res)
+	}
+
+	// Call the service to update the Barang
+	result, err := c.barangService.UpdateStokBarang(ctx.Context(), req, req.ID)
 	if err != nil {
 		res := utils.BuildResponseFailed(dto.MESSAGE_FAILED_UPDATE_USER, err.Error(), nil)
 		return ctx.Status(http.StatusBadRequest).JSON(res)

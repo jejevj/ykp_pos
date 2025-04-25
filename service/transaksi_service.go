@@ -34,24 +34,60 @@ func (s *transaksiService) AddTransaksi(ctx context.Context, req dto.TransaksiCr
 	mu.Lock()
 	defer mu.Unlock()
 
+	// Prepare the transaksi entity
 	transaksi := entity.Transaksi{
 		IdLoading: req.IdLoading,
 		IdBarang:  req.IdBarang,
 		Jumlah:    req.Jumlah,
 	}
 
+	// Add the transaksi via the repository
 	transaksiAdd, err := s.transaksiRepo.AddTransaksi(ctx, transaksi)
 	if err != nil {
 		return dto.TransaksiResponse{}, dto.ErrCreateTransaksi
 	}
 
+	// Map LoadingResponse with UserResponse
+	loadingResponse := dto.LoadingResponse{
+		ID:     transaksiAdd.Loading.ID.String(),
+		IdUser: transaksiAdd.Loading.IdUser,
+		User: dto.UserResponse{
+			ID:         transaksiAdd.Loading.User.ID.String(),
+			Name:       transaksiAdd.Loading.User.Name,
+			Email:      transaksiAdd.Loading.User.Email,
+			TelpNumber: transaksiAdd.Loading.User.TelpNumber,
+			Role:       transaksiAdd.Loading.User.Role,
+			ImageUrl:   transaksiAdd.Loading.User.ImageUrl,
+		},
+	}
+
+	// Map BarangResponse with SatuanResponse
+	barangResponse := dto.BarangResponse{
+		ID:         transaksiAdd.Barang.ID.String(),
+		NamaBarang: transaksiAdd.Barang.NamaBarang,
+		KodeBarang: transaksiAdd.Barang.KodeBarang,
+		HargaBeli:  transaksiAdd.Barang.HargaBeli,
+		HargaJual:  transaksiAdd.Barang.HargaJual,
+		IdSatuan:   transaksiAdd.Barang.IdSatuan,
+		Stok:       transaksiAdd.Barang.Stok,
+		Satuan: dto.SatuanResponse{
+			ID:         transaksiAdd.Barang.Satuan.ID.String(),
+			NamaSatuan: transaksiAdd.Barang.Satuan.NamaSatuan,
+			Value:      transaksiAdd.Barang.Satuan.Value,
+		},
+	}
+
+	// Return the mapped TransaksiResponse
 	return dto.TransaksiResponse{
 		ID:        transaksiAdd.ID.String(),
 		IdLoading: transaksiAdd.IdLoading,
+		Loading:   loadingResponse,
 		IdBarang:  transaksiAdd.IdBarang,
+		Barang:    barangResponse,
 		Jumlah:    transaksiAdd.Jumlah,
 	}, nil
 }
+
 func (s *transaksiService) GetAllTransaksiWithPagination(ctx context.Context, req dto.PaginationRequest) (dto.TransaksiPaginationResponse, error) {
 	dataWithPaginate, err := s.transaksiRepo.GetAllTransaksiWithPagination(ctx, req)
 	if err != nil {
@@ -60,10 +96,43 @@ func (s *transaksiService) GetAllTransaksiWithPagination(ctx context.Context, re
 
 	var datas []dto.TransaksiResponse
 	for _, transaksi := range dataWithPaginate.Transaksis {
+		// Map LoadingResponse with UserResponse
+		loadingResponse := dto.LoadingResponse{
+			ID:     transaksi.Loading.ID.String(),
+			IdUser: transaksi.Loading.IdUser,
+			User: dto.UserResponse{
+				ID:         transaksi.Loading.User.ID.String(),
+				Name:       transaksi.Loading.User.Name,
+				Email:      transaksi.Loading.User.Email,
+				TelpNumber: transaksi.Loading.User.TelpNumber,
+				Role:       transaksi.Loading.User.Role,
+				ImageUrl:   transaksi.Loading.User.ImageUrl,
+			},
+		}
+
+		// Map BarangResponse with SatuanResponse
+		barangResponse := dto.BarangResponse{
+			ID:         transaksi.Barang.ID.String(),
+			NamaBarang: transaksi.Barang.NamaBarang,
+			KodeBarang: transaksi.Barang.KodeBarang,
+			HargaBeli:  transaksi.Barang.HargaBeli,
+			HargaJual:  transaksi.Barang.HargaJual,
+			IdSatuan:   transaksi.Barang.IdSatuan,
+			Stok:       transaksi.Barang.Stok,
+			Satuan: dto.SatuanResponse{
+				ID:         transaksi.Barang.Satuan.ID.String(),
+				NamaSatuan: transaksi.Barang.Satuan.NamaSatuan,
+				Value:      transaksi.Barang.Satuan.Value,
+			},
+		}
+
+		// Map TransaksiResponse
 		data := dto.TransaksiResponse{
 			ID:        transaksi.ID.String(),
 			IdLoading: transaksi.IdLoading,
+			Loading:   loadingResponse,
 			IdBarang:  transaksi.IdBarang,
+			Barang:    barangResponse,
 			Jumlah:    transaksi.Jumlah,
 		}
 
@@ -80,19 +149,56 @@ func (s *transaksiService) GetAllTransaksiWithPagination(ctx context.Context, re
 		},
 	}, nil
 }
+
 func (s *transaksiService) GetTransaksiById(ctx context.Context, transaksiId string) (dto.TransaksiResponse, error) {
+	// Fetch the transaksi with preloaded relationships
 	transaksi, err := s.transaksiRepo.GetTransaksiById(ctx, transaksiId)
 	if err != nil {
 		return dto.TransaksiResponse{}, dto.ErrGetTransaksiById
 	}
 
+	// Map LoadingResponse with UserResponse
+	loadingResponse := dto.LoadingResponse{
+		ID:     transaksi.Loading.ID.String(),
+		IdUser: transaksi.Loading.IdUser,
+		User: dto.UserResponse{
+			ID:         transaksi.Loading.User.ID.String(),
+			Name:       transaksi.Loading.User.Name,
+			Email:      transaksi.Loading.User.Email,
+			TelpNumber: transaksi.Loading.User.TelpNumber,
+			Role:       transaksi.Loading.User.Role,
+			ImageUrl:   transaksi.Loading.User.ImageUrl,
+		},
+	}
+
+	// Map BarangResponse with SatuanResponse
+	barangResponse := dto.BarangResponse{
+		ID:         transaksi.Barang.ID.String(),
+		NamaBarang: transaksi.Barang.NamaBarang,
+		KodeBarang: transaksi.Barang.KodeBarang,
+		HargaBeli:  transaksi.Barang.HargaBeli,
+		HargaJual:  transaksi.Barang.HargaJual,
+		IdSatuan:   transaksi.Barang.IdSatuan,
+		Stok:       transaksi.Barang.Stok,
+		// Satuan: Uncomment if needed
+		Satuan: dto.SatuanResponse{
+			ID:         transaksi.Barang.Satuan.ID.String(),
+			NamaSatuan: transaksi.Barang.Satuan.NamaSatuan,
+			Value:      transaksi.Barang.Satuan.Value,
+		},
+	}
+
+	// Return the mapped TransaksiResponse
 	return dto.TransaksiResponse{
 		ID:        transaksi.ID.String(),
 		IdLoading: transaksi.IdLoading,
+		Loading:   loadingResponse,
 		IdBarang:  transaksi.IdBarang,
+		Barang:    barangResponse,
 		Jumlah:    transaksi.Jumlah,
 	}, nil
 }
+
 func (s *transaksiService) UpdateTransaksi(ctx context.Context, req dto.TransaksiUpdateRequest, transaksiId string) (dto.TransaksiUpdateResponse, error) {
 	// Convert string ID to uuid.UUID (if needed)
 	id, err := uuid.Parse(transaksiId)

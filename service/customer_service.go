@@ -13,7 +13,7 @@ import (
 type (
 	CustomerService interface {
 		AddCustomer(ctx context.Context, req dto.CustomerCreateRequest) (dto.CustomerResponse, error)
-		GetAllCustomerWithPagination(ctx context.Context, req dto.PaginationRequest) (dto.CustomerPaginationResponse, error)
+		GetAllCustomerWithPagination(ctx context.Context) (dto.CustomerPaginationResponse, error)
 		GetCustomerById(ctx context.Context, customerId string) (dto.CustomerResponse, error)
 		UpdateCustomer(ctx context.Context, req dto.CustomerUpdateRequest, customerId string) (dto.CustomerUpdateResponse, error)
 		DeleteCustomer(ctx context.Context, customerId string) error
@@ -54,8 +54,8 @@ func (s *customerService) AddCustomer(ctx context.Context, req dto.CustomerCreat
 		HP:          customerAdd.HP,
 	}, nil
 }
-func (s *customerService) GetAllCustomerWithPagination(ctx context.Context, req dto.PaginationRequest) (dto.CustomerPaginationResponse, error) {
-	dataWithPaginate, err := s.customerRepo.GetAllCustomerWithPagination(ctx, req)
+func (s *customerService) GetAllCustomerWithPagination(ctx context.Context) (dto.CustomerPaginationResponse, error) {
+	dataWithPaginate, err := s.customerRepo.GetAllCustomerWithPagination(ctx)
 	if err != nil {
 		return dto.CustomerPaginationResponse{}, err
 	}

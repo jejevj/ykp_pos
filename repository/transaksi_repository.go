@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"math"
 
+	"github.com/google/uuid"
 	"github.com/jejevj/ykp_pos/dto"
 	"github.com/jejevj/ykp_pos/entity"
 	"gorm.io/gorm"
@@ -32,9 +33,20 @@ func NewTransaksiRepository(db *gorm.DB) TransaksiRepository {
 func (r *transaksiRepository) AddTransaksi(ctx context.Context, transaksi entity.Transaksi) (entity.Transaksi, error) {
 	tx := r.db
 
+	// Create the transaksi
 	if err := tx.WithContext(ctx).Create(&transaksi).Error; err != nil {
 		return entity.Transaksi{}, err
 	}
+
+	// Preload related data (Loading.User and Barang.Satuan)
+	if err := tx.WithContext(ctx).
+		Preload("Loading.User").
+		Preload("Barang.Satuan").
+		Where("id = ?", transaksi.ID).
+		Take(&transaksi).Error; err != nil {
+		return entity.Transaksi{}, err
+	}
+
 	return transaksi, nil
 }
 
@@ -53,11 +65,17 @@ func (r *transaksiRepository) GetAllTransaksiWithPagination(ctx context.Context,
 		req.Page = 1
 	}
 
+	// Count the total number of transaksis
 	if err := tx.WithContext(ctx).Model(&entity.Transaksi{}).Count(&count).Error; err != nil {
 		return dto.GetAllTransaksiRepositoryResponse{}, err
 	}
 
-	if err := tx.WithContext(ctx).Scopes(Paginate(req.Page, req.PerPage)).Find(&transaksis).Error; err != nil {
+	// Fetch the transaksis with preloaded relationships (Loading.User and Barang.Satuan)
+	if err := tx.WithContext(ctx).
+		Preload("Loading.User").
+		Preload("Barang.Satuan").
+		Scopes(Paginate(req.Page, req.PerPage)).
+		Find(&transaksis).Error; err != nil {
 		return dto.GetAllTransaksiRepositoryResponse{}, err
 	}
 
@@ -73,11 +91,19 @@ func (r *transaksiRepository) GetAllTransaksiWithPagination(ctx context.Context,
 		},
 	}, err
 }
+
 func (r *transaksiRepository) GetTransaksiById(ctx context.Context, transaksiId string) (entity.Transaksi, error) {
 	tx := r.db
 
+	// Convert transaksiId string to uuid.UUID
+	id, err := uuid.Parse(transaksiId)
+	if err != nil {
+		return entity.Transaksi{}, fmt.Errorf("invalid transaksi ID format")
+	}
+
+	// Fetch the transaksi with preloaded relationships
 	var transaksi entity.Transaksi
-	if err := tx.WithContext(ctx).Where("id = ?", transaksiId).Take(&transaksi).Error; err != nil {
+	if err := tx.WithContext(ctx).Preload("Loading.User").Preload("Barang.Satuan").Where("id = ?", id).First(&transaksi).Error; err != nil {
 		return entity.Transaksi{}, err
 	}
 

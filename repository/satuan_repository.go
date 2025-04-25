@@ -13,7 +13,7 @@ import (
 type (
 	SatuanRepository interface {
 		AddSatuan(ctx context.Context, satuan entity.Satuan) (entity.Satuan, error)
-		GetAllSatuanWithPagination(ctx context.Context, req dto.PaginationRequest) (dto.GetAllSatuanRepositoryResponse, error)
+		GetAllSatuanWithPagination(ctx context.Context) (dto.GetAllSatuanRepositoryResponse, error)
 		GetSatuanById(ctx context.Context, satuanId string) (entity.Satuan, error)
 		UpdateSatuan(ctx context.Context, satuan entity.Satuan) (entity.Satuan, error)
 		DeleteSatuan(ctx context.Context, satuanId string) error
@@ -38,36 +38,29 @@ func (r *satuanRepository) AddSatuan(ctx context.Context, satuan entity.Satuan) 
 	return satuan, nil
 }
 
-func (r *satuanRepository) GetAllSatuanWithPagination(ctx context.Context, req dto.PaginationRequest) (dto.GetAllSatuanRepositoryResponse, error) {
+func (r *satuanRepository) GetAllSatuanWithPagination(ctx context.Context) (dto.GetAllSatuanRepositoryResponse, error) {
 	tx := r.db
 
 	var satuans []entity.Satuan
 	var err error
 	var count int64
 
-	if req.PerPage == 0 {
-		req.PerPage = 10
-	}
-
-	if req.Page == 0 {
-		req.Page = 1
-	}
-
 	if err := tx.WithContext(ctx).Model(&entity.Satuan{}).Count(&count).Error; err != nil {
 		return dto.GetAllSatuanRepositoryResponse{}, err
 	}
 
-	if err := tx.WithContext(ctx).Scopes(Paginate(req.Page, req.PerPage)).Find(&satuans).Error; err != nil {
+	// if err := tx.WithContext(ctx).Scopes(Paginate(1, 10)).Find(&satuans).Error; err != nil {
+	if err := tx.WithContext(ctx).Find(&satuans).Error; err != nil {
 		return dto.GetAllSatuanRepositoryResponse{}, err
 	}
 
-	totalPage := int64(math.Ceil(float64(count) / float64(req.PerPage)))
+	totalPage := int64(math.Ceil(float64(count) / float64(10)))
 
 	return dto.GetAllSatuanRepositoryResponse{
 		Satuans: satuans,
 		PaginationResponse: dto.PaginationResponse{
-			Page:    req.Page,
-			PerPage: req.PerPage,
+			Page:    1,
+			PerPage: 10,
 			Count:   count,
 			MaxPage: totalPage,
 		},

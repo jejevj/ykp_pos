@@ -51,13 +51,8 @@ func (c *userController) Register(ctx *fiber.Ctx) error {
 }
 
 func (c *userController) GetAllUser(ctx *fiber.Ctx) error {
-	var req dto.PaginationRequest
-	if err := ctx.BodyParser(&req); err != nil {
-		res := utils.BuildResponseFailed(dto.MESSAGE_FAILED_GET_DATA_FROM_BODY, err.Error(), nil)
-		return ctx.Status(http.StatusBadRequest).JSON(res)
-	}
 
-	result, err := c.userService.GetAllUserWithPagination(ctx.Context(), req)
+	result, err := c.userService.GetAllUserWithPagination(ctx.Context())
 	if err != nil {
 		res := utils.BuildResponseFailed(dto.MESSAGE_FAILED_GET_LIST_USER, err.Error(), nil)
 		return ctx.Status(http.StatusBadRequest).JSON(res)

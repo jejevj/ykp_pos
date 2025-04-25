@@ -4,10 +4,10 @@ tmp_dir = "tmp"
 
 [build]
   args_bin = []
-  bin = "./tmp/main"
-  cmd = "go build -o ./tmp/main ."
-  delay = 2000
-  exclude_dir = ["assets", "tmp", "vendor", "testdata", "static", "volumes"]
+  bin = "tmp\\main.exe"
+  cmd = "go build -o ./tmp/main.exe ."
+  delay = 1000
+  exclude_dir = ["assets", "tmp", "vendor", "testdata"]
   exclude_file = []
   exclude_regex = ["_test.go"]
   exclude_unchanged = false
@@ -22,10 +22,10 @@ tmp_dir = "tmp"
   poll_interval = 0
   post_cmd = []
   pre_cmd = []
-  rerun = true
-  rerun_delay = 2000
-  send_interrupt = true
-  stop_on_error = true
+  rerun = false
+  rerun_delay = 500
+  send_interrupt = false
+  stop_on_error = false
 
 [color]
   app = ""

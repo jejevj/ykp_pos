@@ -13,7 +13,7 @@ import (
 type (
 	SatuanService interface {
 		AddSatuan(ctx context.Context, req dto.SatuanCreateRequest) (dto.SatuanResponse, error)
-		GetAllSatuanWithPagination(ctx context.Context, req dto.PaginationRequest) (dto.SatuanPaginationResponse, error)
+		GetAllSatuanWithPagination(ctx context.Context) (dto.SatuanPaginationResponse, error)
 		GetSatuanById(ctx context.Context, satuanId string) (dto.SatuanResponse, error)
 		UpdateSatuan(ctx context.Context, req dto.SatuanUpdateRequest, satuanId string) (dto.SatuanUpdateResponse, error)
 		DeleteSatuan(ctx context.Context, satuanId string) error
@@ -50,8 +50,8 @@ func (s *satuanService) AddSatuan(ctx context.Context, req dto.SatuanCreateReque
 		Value:      satuanAdd.Value,
 	}, nil
 }
-func (s *satuanService) GetAllSatuanWithPagination(ctx context.Context, req dto.PaginationRequest) (dto.SatuanPaginationResponse, error) {
-	dataWithPaginate, err := s.satuanRepo.GetAllSatuanWithPagination(ctx, req)
+func (s *satuanService) GetAllSatuanWithPagination(ctx context.Context) (dto.SatuanPaginationResponse, error) {
+	dataWithPaginate, err := s.satuanRepo.GetAllSatuanWithPagination(ctx)
 	if err != nil {
 		return dto.SatuanPaginationResponse{}, err
 	}

@@ -77,7 +77,7 @@ func (r *loadingRepository) GetLoadingById(ctx context.Context, loadingId string
 	tx := r.db
 
 	var loading entity.Loading
-	if err := tx.WithContext(ctx).Where("id = ?", loadingId).Take(&loading).Error; err != nil {
+	if err := tx.WithContext(ctx).Preload("User").Where("id = ?", loadingId).Take(&loading).Error; err != nil {
 		return entity.Loading{}, err
 	}
 

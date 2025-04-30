@@ -35,17 +35,30 @@ func NewUserController(us service.UserService) UserController {
 func (c *userController) Register(ctx *fiber.Ctx) error {
 	var user dto.UserCreateRequest
 
+	// Manually handle multipart file (image)
+	image, err := ctx.FormFile("image") // Use FormFile to handle file uploads
+	if err != nil {
+		res := utils.BuildResponseFailed(dto.MESSAGE_FAILED_GET_DATA_FROM_BODY, err.Error(), nil)
+		return ctx.Status(http.StatusBadRequest).JSON(res)
+	}
+
+	// Parse other form fields into the DTO
 	if err := ctx.BodyParser(&user); err != nil {
 		res := utils.BuildResponseFailed(dto.MESSAGE_FAILED_GET_DATA_FROM_BODY, err.Error(), nil)
 		return ctx.Status(http.StatusBadRequest).JSON(res)
 	}
 
+	// Set the image file to the DTO for the service layer
+	user.Image = image // Assign the file to the DTO
+
+	// Call the service layer to handle user registration
 	result, err := c.userService.RegisterUser(ctx.Context(), user)
 	if err != nil {
 		res := utils.BuildResponseFailed(dto.MESSAGE_FAILED_REGISTER_USER, err.Error(), nil)
 		return ctx.Status(http.StatusBadRequest).JSON(res)
 	}
 
+	// Return success response
 	res := utils.BuildResponseSuccess(dto.MESSAGE_SUCCESS_REGISTER_USER, result)
 	return ctx.Status(http.StatusOK).JSON(res)
 }
@@ -139,7 +152,7 @@ func (c *userController) Update(ctx *fiber.Ctx) error {
 		return ctx.Status(http.StatusBadRequest).JSON(res)
 	}
 
-	userId := ctx.Locals("user_id").(string)
+	userId := req.ID
 	result, err := c.userService.UpdateUser(ctx.Context(), req, userId)
 	if err != nil {
 		res := utils.BuildResponseFailed(dto.MESSAGE_FAILED_UPDATE_USER, err.Error(), nil)
@@ -151,7 +164,12 @@ func (c *userController) Update(ctx *fiber.Ctx) error {
 }
 
 func (c *userController) Delete(ctx *fiber.Ctx) error {
-	userId := ctx.Locals("user_id").(string)
+	var req dto.GetUserByIdRequest
+	if err := ctx.BodyParser(&req); err != nil {
+		res := utils.BuildResponseFailed(dto.MESSAGE_FAILED_GET_DATA_FROM_BODY, err.Error(), nil)
+		return ctx.Status(http.StatusBadRequest).JSON(res)
+	}
+	userId := req.ID
 
 	if err := c.userService.DeleteUser(ctx.Context(), userId); err != nil {
 		res := utils.BuildResponseFailed(dto.MESSAGE_FAILED_DELETE_USER, err.Error(), nil)

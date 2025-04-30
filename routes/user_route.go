@@ -14,7 +14,7 @@ func User(route fiber.Router, userController controller.UserController, jwtServi
 	routes.Get("", userController.GetAllUser)
 	routes.Post("/login", userController.Login)
 	routes.Delete("", middleware.Authenticate(jwtService), userController.Delete)
-	routes.Patch("", middleware.Authenticate(jwtService), userController.Update)
+	routes.Put("", middleware.Authenticate(jwtService), userController.Update)
 	routes.Get("/me", middleware.Authenticate(jwtService), userController.Me)
 	routes.Post("/verify_email", userController.VerifyEmail)
 	routes.Post("/send_verification_email", userController.SendVerificationEmail)

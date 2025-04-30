@@ -72,6 +72,14 @@ func main() {
 		customerService service.CustomerService = service.NewCustomerService(customerRepository, jwtService)
 		// Controller
 		customerController controller.CustomerController = controller.NewCustomerController(customerService)
+
+		// Customer Service
+		// Repository
+		mainSettingRepository repository.MainSettingRepository = repository.NewMainSettingRepository(db)
+		// Service
+		mainSettingService service.MainSettingService = service.NewMainSettingService(mainSettingRepository, jwtService)
+		// Controller
+		mainSettingController controller.MainSettingController = controller.NewMainSettingController(mainSettingService)
 	)
 
 	server := fiber.New()
@@ -85,6 +93,7 @@ func main() {
 	routes.Loading(apiGroup, loadingController, jwtService)
 	routes.Transaksi(apiGroup, transaksiController, jwtService)
 	routes.Customer(apiGroup, customerController, jwtService)
+	routes.MainSetting(apiGroup, mainSettingController, jwtService)
 
 	server.Static("/assets", "./assets")
 

@@ -22,12 +22,13 @@ func Migrate(db *gorm.DB) error {
 	}
 
 	if err := db.AutoMigrate(
-		&entity.User{},
-		&entity.Satuan{},
-		&entity.Barang{},
-		&entity.Loading{},
-		&entity.Transaksi{},
-		&entity.Customer{},
+		// &entity.User{},
+		// &entity.Satuan{},
+		// &entity.Barang{},
+		// &entity.Loading{},
+		// &entity.Transaksi{},
+		// &entity.Customer{},
+		&entity.MainSetting{},
 	); err != nil {
 		return err
 	}

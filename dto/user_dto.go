@@ -24,6 +24,9 @@ type (
 		ImageUrl   string `json:"image_url"`
 		IsVerified bool   `json:"is_verified"`
 	}
+	GetUserByIdRequest struct {
+		ID string `json:"id" form:"id"`
+	}
 
 	UserPaginationResponse struct {
 		Data []UserResponse `json:"data"`
@@ -36,6 +39,7 @@ type (
 	}
 
 	UserUpdateRequest struct {
+		ID         string `json:"id" form:"id"`
 		Name       string `json:"name" form:"name"`
 		TelpNumber string `json:"telp_number" form:"telp_number"`
 		Email      string `json:"email" form:"email"`

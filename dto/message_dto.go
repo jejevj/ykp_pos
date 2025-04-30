@@ -82,4 +82,10 @@ var (
 	ErrUpdateCustomer   = errors.New("failed to update customer")
 	ErrCustomerNotFound = errors.New("data not found")
 	ErrDeleteCustomer   = errors.New("failed to delete customer")
+	// MainSetting Error
+	ErrCreateMainSetting   = errors.New("failed to create main settings")
+	ErrGetMainSettingById  = errors.New("failed to get main settings by id")
+	ErrUpdateMainSetting   = errors.New("failed to update main settings")
+	ErrMainSettingNotFound = errors.New("data not found")
+	ErrDeleteMainSetting   = errors.New("failed to delete main settings")
 )

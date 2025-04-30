@@ -60,11 +60,6 @@ func (s *userService) RegisterUser(ctx context.Context, req dto.UserCreateReques
 
 	var filename string
 
-	_, flag, _ := s.userRepo.CheckEmail(ctx, req.Email)
-	if flag {
-		return dto.UserResponse{}, dto.ErrEmailAlreadyExists
-	}
-
 	if req.Image != nil {
 		imageId := uuid.New()
 		ext := utils.GetExtensions(req.Image.Filename)
@@ -88,16 +83,6 @@ func (s *userService) RegisterUser(ctx context.Context, req dto.UserCreateReques
 	userReg, err := s.userRepo.RegisterUser(ctx, user)
 	if err != nil {
 		return dto.UserResponse{}, dto.ErrCreateUser
-	}
-
-	draftEmail, err := makeVerificationEmail(userReg.Email)
-	if err != nil {
-		return dto.UserResponse{}, err
-	}
-
-	err = utils.SendMail(userReg.Email, draftEmail["subject"], draftEmail["body"])
-	if err != nil {
-		return dto.UserResponse{}, err
 	}
 
 	return dto.UserResponse{

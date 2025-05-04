@@ -11,7 +11,7 @@ type Transaksi struct {
 	Loading   Loading   `gorm:"foreignKey:IdLoading" json:"loading"`
 	IdBarang  string    `json:"id_barang"`
 	Barang    Barang    `gorm:"foreignKey:IdBarang" json:"barang"`
-	Jumlah    int       `json:"id_satuan"`
+	Jumlah    int       `json:"jumlah"`
 
 	Timestamp
 }

@@ -14,7 +14,7 @@ import (
 type (
 	TransaksiRepository interface {
 		AddTransaksi(ctx context.Context, transaksi entity.Transaksi) (entity.Transaksi, error)
-		GetAllTransaksiWithPagination(ctx context.Context, req dto.PaginationRequest) (dto.GetAllTransaksiRepositoryResponse, error)
+		GetAllTransaksiWithPagination(ctx context.Context) (dto.GetAllTransaksiRepositoryResponse, error)
 		GetTransaksiById(ctx context.Context, transaksiId string) (entity.Transaksi, error)
 		UpdateTransaksi(ctx context.Context, transaksi entity.Transaksi) (entity.Transaksi, error)
 		DeleteTransaksi(ctx context.Context, transaksiId string) error
@@ -40,8 +40,8 @@ func (r *transaksiRepository) AddTransaksi(ctx context.Context, transaksi entity
 
 	// Preload related data (Loading.User and Barang.Satuan)
 	if err := tx.WithContext(ctx).
-		Preload("Loading.User").
 		Preload("Barang.Satuan").
+		Preload("Loading.User").
 		Where("id = ?", transaksi.ID).
 		Take(&transaksi).Error; err != nil {
 		return entity.Transaksi{}, err
@@ -50,20 +50,12 @@ func (r *transaksiRepository) AddTransaksi(ctx context.Context, transaksi entity
 	return transaksi, nil
 }
 
-func (r *transaksiRepository) GetAllTransaksiWithPagination(ctx context.Context, req dto.PaginationRequest) (dto.GetAllTransaksiRepositoryResponse, error) {
+func (r *transaksiRepository) GetAllTransaksiWithPagination(ctx context.Context) (dto.GetAllTransaksiRepositoryResponse, error) {
 	tx := r.db
 
 	var transaksis []entity.Transaksi
 	var err error
 	var count int64
-
-	if req.PerPage == 0 {
-		req.PerPage = 10
-	}
-
-	if req.Page == 0 {
-		req.Page = 1
-	}
 
 	// Count the total number of transaksis
 	if err := tx.WithContext(ctx).Model(&entity.Transaksi{}).Count(&count).Error; err != nil {
@@ -71,21 +63,22 @@ func (r *transaksiRepository) GetAllTransaksiWithPagination(ctx context.Context,
 	}
 
 	// Fetch the transaksis with preloaded relationships (Loading.User and Barang.Satuan)
+	// Fetch transaksis with preloaded relationships (Barang and Satuan)
 	if err := tx.WithContext(ctx).
 		Preload("Loading.User").
 		Preload("Barang.Satuan").
-		Scopes(Paginate(req.Page, req.PerPage)).
+		Scopes(Paginate(1, 10)).
 		Find(&transaksis).Error; err != nil {
 		return dto.GetAllTransaksiRepositoryResponse{}, err
 	}
 
-	totalPage := int64(math.Ceil(float64(count) / float64(req.PerPage)))
+	totalPage := int64(math.Ceil(float64(count) / float64(10)))
 
 	return dto.GetAllTransaksiRepositoryResponse{
 		Transaksis: transaksis,
 		PaginationResponse: dto.PaginationResponse{
-			Page:    req.Page,
-			PerPage: req.PerPage,
+			Page:    1,
+			PerPage: 10,
 			Count:   count,
 			MaxPage: totalPage,
 		},

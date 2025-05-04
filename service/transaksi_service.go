@@ -13,7 +13,7 @@ import (
 type (
 	TransaksiService interface {
 		AddTransaksi(ctx context.Context, req dto.TransaksiCreateRequest) (dto.TransaksiResponse, error)
-		GetAllTransaksiWithPagination(ctx context.Context, req dto.PaginationRequest) (dto.TransaksiPaginationResponse, error)
+		GetAllTransaksiWithPagination(ctx context.Context) (dto.TransaksiPaginationResponse, error)
 		GetTransaksiById(ctx context.Context, transaksiId string) (dto.TransaksiResponse, error)
 		UpdateTransaksi(ctx context.Context, req dto.TransaksiUpdateRequest, transaksiId string) (dto.TransaksiUpdateResponse, error)
 		DeleteTransaksi(ctx context.Context, transaksiId string) error
@@ -88,8 +88,9 @@ func (s *transaksiService) AddTransaksi(ctx context.Context, req dto.TransaksiCr
 	}, nil
 }
 
-func (s *transaksiService) GetAllTransaksiWithPagination(ctx context.Context, req dto.PaginationRequest) (dto.TransaksiPaginationResponse, error) {
-	dataWithPaginate, err := s.transaksiRepo.GetAllTransaksiWithPagination(ctx, req)
+func (s *transaksiService) GetAllTransaksiWithPagination(ctx context.Context) (dto.TransaksiPaginationResponse, error) {
+	// Fetch data with pagination and preloaded relationships
+	dataWithPaginate, err := s.transaksiRepo.GetAllTransaksiWithPagination(ctx)
 	if err != nil {
 		return dto.TransaksiPaginationResponse{}, err
 	}
@@ -110,15 +111,17 @@ func (s *transaksiService) GetAllTransaksiWithPagination(ctx context.Context, re
 			},
 		}
 
-		// Map BarangResponse with SatuanResponse
+		// Map BarangResponse
 		barangResponse := dto.BarangResponse{
-			ID:         transaksi.Barang.ID.String(),
-			NamaBarang: transaksi.Barang.NamaBarang,
-			KodeBarang: transaksi.Barang.KodeBarang,
-			HargaBeli:  transaksi.Barang.HargaBeli,
-			HargaJual:  transaksi.Barang.HargaJual,
-			IdSatuan:   transaksi.Barang.IdSatuan,
-			Stok:       transaksi.Barang.Stok,
+			ID:           transaksi.Barang.ID.String(),
+			NamaBarang:   transaksi.Barang.NamaBarang,
+			KodeBarang:   transaksi.Barang.KodeBarang,
+			HargaBeli:    transaksi.Barang.HargaBeli,
+			HargaJual:    transaksi.Barang.HargaJual,
+			IdSatuan:     transaksi.Barang.IdSatuan,
+			JumlahKrat:   transaksi.Barang.JumlahKrat,
+			JumlahSatuan: transaksi.Barang.JumlahSatuan,
+			Stok:         transaksi.Barang.Stok,
 			Satuan: dto.SatuanResponse{
 				ID:         transaksi.Barang.Satuan.ID.String(),
 				NamaSatuan: transaksi.Barang.Satuan.NamaSatuan,
@@ -136,9 +139,11 @@ func (s *transaksiService) GetAllTransaksiWithPagination(ctx context.Context, re
 			Jumlah:    transaksi.Jumlah,
 		}
 
+		// Add the mapped transaction data to the response slice
 		datas = append(datas, data)
 	}
 
+	// Return paginated response with transaction data
 	return dto.TransaksiPaginationResponse{
 		Data: datas,
 		PaginationResponse: dto.PaginationResponse{
@@ -173,13 +178,15 @@ func (s *transaksiService) GetTransaksiById(ctx context.Context, transaksiId str
 
 	// Map BarangResponse with SatuanResponse
 	barangResponse := dto.BarangResponse{
-		ID:         transaksi.Barang.ID.String(),
-		NamaBarang: transaksi.Barang.NamaBarang,
-		KodeBarang: transaksi.Barang.KodeBarang,
-		HargaBeli:  transaksi.Barang.HargaBeli,
-		HargaJual:  transaksi.Barang.HargaJual,
-		IdSatuan:   transaksi.Barang.IdSatuan,
-		Stok:       transaksi.Barang.Stok,
+		ID:           transaksi.Barang.ID.String(),
+		NamaBarang:   transaksi.Barang.NamaBarang,
+		KodeBarang:   transaksi.Barang.KodeBarang,
+		HargaBeli:    transaksi.Barang.HargaBeli,
+		HargaJual:    transaksi.Barang.HargaJual,
+		IdSatuan:     transaksi.Barang.IdSatuan,
+		Stok:         transaksi.Barang.Stok,
+		JumlahKrat:   transaksi.Barang.JumlahKrat,
+		JumlahSatuan: transaksi.Barang.JumlahSatuan,
 		// Satuan: Uncomment if needed
 		Satuan: dto.SatuanResponse{
 			ID:         transaksi.Barang.Satuan.ID.String(),

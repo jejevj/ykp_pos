@@ -26,9 +26,9 @@ func Migrate(db *gorm.DB) error {
 		// &entity.Satuan{},
 		// &entity.Barang{},
 		// &entity.Loading{},
-		// &entity.Transaksi{},
+		&entity.Transaksi{},
 		// &entity.Customer{},
-		&entity.MainSetting{},
+		// &entity.MainSetting{},
 	); err != nil {
 		return err
 	}

@@ -13,7 +13,7 @@ import (
 type (
 	LoadingService interface {
 		AddLoading(ctx context.Context, req dto.LoadingCreateRequest) (dto.LoadingResponse, error)
-		GetAllLoadingWithPagination(ctx context.Context, req dto.PaginationRequest) (dto.LoadingPaginationResponse, error)
+		GetAllLoadingWithPagination(ctx context.Context) (dto.LoadingPaginationResponse, error)
 		GetLoadingById(ctx context.Context, loadingId string) (dto.LoadingResponse, error)
 		UpdateLoading(ctx context.Context, req dto.LoadingUpdateRequest, loadingId string) (dto.LoadingUpdateResponse, error)
 		DeleteLoading(ctx context.Context, loadingId string) error
@@ -42,15 +42,24 @@ func (s *loadingService) AddLoading(ctx context.Context, req dto.LoadingCreateRe
 	if err != nil {
 		return dto.LoadingResponse{}, dto.ErrCreateLoading
 	}
+	userResponse := dto.UserResponse{
+		ID:         loadingAdd.User.ID.String(),
+		Name:       loadingAdd.User.Name,
+		Email:      loadingAdd.User.Email,
+		TelpNumber: loadingAdd.User.TelpNumber,
+		Role:       loadingAdd.User.Role,
+		ImageUrl:   loadingAdd.User.ImageUrl,
+	}
 
 	return dto.LoadingResponse{
 		ID:         loadingAdd.ID.String(),
 		IdUser:     loadingAdd.IdUser,
+		User:       userResponse,
 		IsApproved: loadingAdd.IsApproved,
 	}, nil
 }
-func (s *loadingService) GetAllLoadingWithPagination(ctx context.Context, req dto.PaginationRequest) (dto.LoadingPaginationResponse, error) {
-	dataWithPaginate, err := s.loadingRepo.GetAllLoadingWithPagination(ctx, req)
+func (s *loadingService) GetAllLoadingWithPagination(ctx context.Context) (dto.LoadingPaginationResponse, error) {
+	dataWithPaginate, err := s.loadingRepo.GetAllLoadingWithPagination(ctx)
 	if err != nil {
 		return dto.LoadingPaginationResponse{}, err
 	}
@@ -58,8 +67,16 @@ func (s *loadingService) GetAllLoadingWithPagination(ctx context.Context, req dt
 	var datas []dto.LoadingResponse
 	for _, loading := range dataWithPaginate.Loadings {
 		data := dto.LoadingResponse{
-			ID:         loading.ID.String(),
-			IdUser:     loading.IdUser,
+			ID:     loading.ID.String(),
+			IdUser: loading.IdUser,
+			User: dto.UserResponse{
+				ID:         loading.User.ID.String(),
+				Name:       loading.User.Name,
+				Email:      loading.User.Email,
+				TelpNumber: loading.User.TelpNumber,
+				Role:       loading.User.Role,
+				ImageUrl:   loading.User.ImageUrl,
+			},
 			IsApproved: loading.IsApproved,
 		}
 

@@ -13,7 +13,7 @@ import (
 type (
 	LoadingRepository interface {
 		AddLoading(ctx context.Context, loading entity.Loading) (entity.Loading, error)
-		GetAllLoadingWithPagination(ctx context.Context, req dto.PaginationRequest) (dto.GetAllLoadingRepositoryResponse, error)
+		GetAllLoadingWithPagination(ctx context.Context) (dto.GetAllLoadingRepositoryResponse, error)
 		GetLoadingById(ctx context.Context, loadingId string) (entity.Loading, error)
 		UpdateLoading(ctx context.Context, loading entity.Loading) (entity.Loading, error)
 		DeleteLoading(ctx context.Context, loadingId string) error
@@ -32,42 +32,46 @@ func NewLoadingRepository(db *gorm.DB) LoadingRepository {
 func (r *loadingRepository) AddLoading(ctx context.Context, loading entity.Loading) (entity.Loading, error) {
 	tx := r.db
 
-	if err := tx.WithContext(ctx).Create(&loading).Error; err != nil {
+	// Start a transaction
+	err := tx.WithContext(ctx).Create(&loading).Error
+	if err != nil {
 		return entity.Loading{}, err
 	}
+
+	// Preload User based on the created Loading entity
+	err = tx.WithContext(ctx).
+		Preload("User").             // Preload associated User data
+		Where("id = ?", loading.ID). // Make sure to use the correct field for loading's ID
+		Take(&loading).Error
+	if err != nil {
+		return entity.Loading{}, err
+	}
+
 	return loading, nil
 }
 
-func (r *loadingRepository) GetAllLoadingWithPagination(ctx context.Context, req dto.PaginationRequest) (dto.GetAllLoadingRepositoryResponse, error) {
+func (r *loadingRepository) GetAllLoadingWithPagination(ctx context.Context) (dto.GetAllLoadingRepositoryResponse, error) {
 	tx := r.db
 
 	var loadings []entity.Loading
 	var err error
 	var count int64
 
-	if req.PerPage == 0 {
-		req.PerPage = 10
-	}
-
-	if req.Page == 0 {
-		req.Page = 1
-	}
-
 	if err := tx.WithContext(ctx).Model(&entity.Loading{}).Count(&count).Error; err != nil {
 		return dto.GetAllLoadingRepositoryResponse{}, err
 	}
 
-	if err := tx.WithContext(ctx).Scopes(Paginate(req.Page, req.PerPage)).Find(&loadings).Error; err != nil {
+	if err := tx.WithContext(ctx).Preload("User").Scopes(Paginate(1, 10)).Find(&loadings).Error; err != nil {
 		return dto.GetAllLoadingRepositoryResponse{}, err
 	}
 
-	totalPage := int64(math.Ceil(float64(count) / float64(req.PerPage)))
+	totalPage := int64(math.Ceil(float64(count) / float64(10)))
 
 	return dto.GetAllLoadingRepositoryResponse{
 		Loadings: loadings,
 		PaginationResponse: dto.PaginationResponse{
-			Page:    req.Page,
-			PerPage: req.PerPage,
+			Page:    1,
+			PerPage: 10,
 			Count:   count,
 			MaxPage: totalPage,
 		},
